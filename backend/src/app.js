@@ -1,6 +1,8 @@
 import express from 'express';
 import cors from 'cors';
 import authRoutes from './routes/authRoutes.js';
+import ingestionRoutes from './routes/ingestionRoutes.js';
+import analyticsRoutes from './routes/analyticsRoutes.js';
 
 const app = express();
 
@@ -14,6 +16,8 @@ app.get('/health', (req, res) => {
 
 // Routes
 app.use('/auth', authRoutes);
+app.use('/api/v1', ingestionRoutes);
+app.use('/api/v1/admin', analyticsRoutes);
 
 // Error handler
 app.use((err, req, res, next) => {
