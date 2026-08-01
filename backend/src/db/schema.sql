@@ -130,3 +130,11 @@ CREATE TABLE IF NOT EXISTS auth_sessions (
     revoked_at TIMESTAMP WITH TIME ZONE,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
+-- ADDITIVE ONLY — safe to run on top of his existing schema.sql.
+-- Priority Engine needs somewhere to write scores; these columns don't
+-- exist yet. Announce this in the team channel before merging, per your
+-- own git workflow doc (schema changes require team sign-off).
+ALTER TABLE bins ADD COLUMN IF NOT EXISTS priority_score NUMERIC(6,2) DEFAULT 0;
+ALTER TABLE bins ADD COLUMN IF NOT EXISTS predicted_time_to_full_hours NUMERIC(6,2);
+ALTER TABLE bins ADD COLUMN IF NOT EXISTS predicted_confidence VARCHAR(10);
+ALTER TABLE bins ADD COLUMN IF NOT EXISTS predicted_at TIMESTAMP WITH TIME ZONE;
