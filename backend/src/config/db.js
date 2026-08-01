@@ -3,8 +3,7 @@ import { config } from './env.js';
 
 const { Pool } = pg;
 
-
-export const pool = new Pool({ ...config.db, ssl: { rejectUnauthorized: false } });
+export const pool = new Pool(config.db);
 
 pool.on('error', (err) => {
   console.error('Unexpected error on idle client', err);
