@@ -2,12 +2,17 @@ import { createClient } from 'redis';
 import { config } from './env.js';
 
 export const redisClient = createClient({
-  url: config.redis.url
+  url: config.redis.url,
+  socket: {
+    reconnectStrategy: (retries) => (retries > 1 ? false : 1000)
+  }
 });
 
 redisClient.on('error', (err) => {
-  // Avoid unhandled rejection crashing the process if Redis is unavailable
-  console.warn('Redis Client Warning:', err.message);
+  // Suppress continuous reconnection spam if Redis is offline
+  if (process.env.DEBUG_REDIS) {
+    console.warn('Redis Client Warning:', err.message);
+  }
 });
 
 export const connectRedis = async () => {

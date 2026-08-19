@@ -21,8 +21,7 @@ const poolConfig = config.db.connectionString
 export const pool = new Pool(poolConfig);
 
 pool.on('error', (err) => {
-  console.error('Unexpected error on idle client', err);
-  process.exit(-1);
+  console.warn('PostgreSQL idle client notice:', err.message);
 });
 
 export const query = (text, params) => pool.query(text, params);

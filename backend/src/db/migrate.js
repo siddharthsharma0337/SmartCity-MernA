@@ -7,19 +7,22 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const runMigrations = async () => {
-  const client = await pool.connect();
+  let client;
   try {
-    console.log('Running migrations...');
+    console.log('Connecting to PostgreSQL to run migrations...');
+    client = await pool.connect();
     const schemaPath = path.join(__dirname, 'schema.sql');
     const schemaSql = fs.readFileSync(schemaPath, 'utf8');
     
     await client.query(schemaSql);
     console.log('Migrations completed successfully.');
   } catch (error) {
-    console.error('Error running migrations:', error);
+    console.warn('Migration warning:', error.message);
   } finally {
-    client.release();
-    pool.end();
+    if (client) client.release();
+    try {
+      await pool.end();
+    } catch {}
   }
 };
 
