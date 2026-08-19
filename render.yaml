@@ -1,0 +1,26 @@
+﻿services:
+  - type: web
+    name: smart-waste-backend
+    env: node
+    plan: free
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: npm run migrate && npm start
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: JWT_SECRET
+        generateValue: true
+      - key: DATABASE_URL
+        fromDatabase:
+          name: smart-waste-db
+          property: connectionString
+      - key: REDIS_URL
+        value: redis://localhost:6379
+
+databases:
+  - name: smart-waste-db
+    plan: free
+    databaseName: smart_waste_db
+    user: smart_waste_user
